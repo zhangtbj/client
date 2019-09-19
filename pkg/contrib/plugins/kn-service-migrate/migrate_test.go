@@ -12,7 +12,7 @@
 //// See the License for the specific language governing permissions and
 //// limitations under the License.
 //
-package service
+package kn_service_migrate
 
 import (
 	"fmt"
@@ -29,7 +29,7 @@ func TestMigrateWithoutNamespaceParameter(t *testing.T) {
 	client := knclient.NewMockKnClient(t)
 	fmt.Println(os.LookupEnv("KUBECONFIG"))
 	// Testing:
-	_, err := executeServiceCommand(client, "migrate")
+	_, err := service.executeServiceCommand(client, "migrate")
 	assert.ErrorContains(t, err, "cannot get destination cluster namespace")
 }
 
@@ -39,6 +39,6 @@ func TestMigrateWithoutKubeconfigParameter(t *testing.T) {
 	client := knclient.NewMockKnClient(t)
 
 	// Testing:
-	_, err := executeServiceCommand(client, "migrate", "--namespace", "default", "--destination-namespace", "default")
+	_, err := service.executeServiceCommand(client, "migrate", "--namespace", "default", "--destination-namespace", "default")
 	assert.ErrorContains(t, err, "cannot get source cluster kube config")
 }

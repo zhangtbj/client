@@ -18,6 +18,8 @@ import (
 	"io"
 	"time"
 
+	kn_service_migrate "knative.dev/client/pkg/contrib/plugins/kn-service-migrate"
+
 	"knative.dev/client/pkg/kn/commands"
 	serving_kn_v1alpha1 "knative.dev/client/pkg/serving/v1alpha1"
 
@@ -41,7 +43,7 @@ func NewServiceCommand(p *commands.KnParams) *cobra.Command {
 	serviceCmd.AddCommand(NewServiceCreateCommand(p))
 	serviceCmd.AddCommand(NewServiceDeleteCommand(p))
 	serviceCmd.AddCommand(NewServiceUpdateCommand(p))
-	serviceCmd.AddCommand(NewServiceMigrateCommand(p))
+	serviceCmd.AddCommand(kn_service_migrate.NewServiceMigrateCommand(p))
 	return serviceCmd
 }
 

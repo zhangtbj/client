@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package service
+package kn_service_migrate
 
 import (
 	"fmt"
 	"os"
+
+	"knative.dev/client/pkg/kn/commands/service"
 
 	"github.com/spf13/cobra"
 	apiv1 "k8s.io/api/core/v1"
@@ -209,7 +211,7 @@ func NewServiceMigrateCommand(p *commands.KnParams) *cobra.Command {
 							_, err = servingclient_d.Revisions(namespaceD).Update(revision)
 							if err != nil {
 								// Retry to update when a resource version conflict exists
-								if api_errors.IsConflict(err) && retries < MaxUpdateRetries {
+								if api_errors.IsConflict(err) && retries < service.MaxUpdateRetries {
 									retries++
 									continue
 								}
@@ -317,4 +319,15 @@ func constructRevision(originalrevision serving_v1alpha1_api.Revision, config_uu
 	revision.Spec = originalrevision.Spec
 
 	return &revision
+}
+
+func serviceExists(client v1alpha1.KnClient, name string) (bool, error) {
+	_, err := client.GetService(name)
+	if api_errors.IsNotFound(err) {
+		return false, nil
+	}
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }
